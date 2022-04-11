@@ -30,7 +30,6 @@ Composants
 - Ils ont engagé une équipe spécialisée dans les données (data scientist) et une équipe spécialisée dans l'informatique. Erreur : Ne pas avoir pris d'architecte (data engineer) aurait fait office de "chef d'orchestre" du projet
 - Et surtout, ils ne nous ont pas choisi dès le début
 
-
 ##### Annexes
 Différents composants existant:
 - Queue de données avec au moins une queue distribué
@@ -42,6 +41,12 @@ Point importants:
 - La nuit il y a surement moins de données. Les pacifieurs dorment. (role de la partie Statistique ?)
 - Quelle est la taille d'un seul évenement / Combien il y d'event par jour
 - Les 1% peuvent bcp variés (manifestations ou autre)
+
+## Architecture
+
+Suite à ces réflexions, voici l'architecture que nous proposons
+
+![](images/Architecture_spark.PNG)
 
 ## Authors
 - Guillaume LARUE
