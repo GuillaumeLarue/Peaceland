@@ -30,6 +30,12 @@ Composants
 - Ils ont engagé une équipe spécialisée dans les données (data scientist) et une équipe spécialisée dans l'informatique. Erreur : Ne pas avoir pris d'architecte (data engineer) aurait fait office de "chef d'orchestre" du projet
 - Et surtout, ils ne nous ont pas choisi dès le début
 
+> Peaceland a probablement oublié certaines informations techniques dans le rapport envoyé par le drone. Dans le futur, cette information pourrait aider Peaceland à rendre ses observateurs de la paix beaucoup plus efficaces. Quelles informations ?
+
+- Il faudrait fournir l'identifiant des gardiens de la paix environnant.
+- Complément d'information pour identifier le problème (ex: Présence arme à feu)
+- On considere que les gardiens de la paix arrivent assez vite pour ne pas propager la colere à d'autre citoyen donc on ne releve pas les citoyens proche suseptible de se faire "contaminer" par la personne turbulante.
+
 ##### Annexes
 Différents composants existant:
 - Queue de données avec au moins une queue distribué
@@ -52,6 +58,7 @@ Suite à ces réflexions, voici l'architecture que nous proposons
 - Guillaume LARUE
 - Youenn LOIE
 - Nicolas TRABET
+- Enguerrand de Gentile Duquesne
 
 ## License
 For open source projects, say how it is licensed.
