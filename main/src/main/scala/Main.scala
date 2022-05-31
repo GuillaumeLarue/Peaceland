@@ -1,7 +1,9 @@
+import kafka.utils.Json
+import model.Message
+
 import java.util.Properties
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 import org.apache.kafka.common.serialization.StringSerializer
-import org.codehaus.jackson.map.deser.std.StringDeserializer
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -19,6 +21,9 @@ object Main {
 
     val record = new ProducerRecord[String, String]("atopic", key, value)
     producer.send(record)
+
+    val laptop1 = new Message(citoyen_id_arg = 1324123412, citoyen_peacescore_arg = 13)
+
 
     producer.close()
 
