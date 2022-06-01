@@ -1,5 +1,4 @@
 package model
-import kafka.utils.Json
 import java.time.LocalDateTime
 
 class Message(val timestamp_arg: LocalDateTime = LocalDateTime.now(),
