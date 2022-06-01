@@ -11,7 +11,7 @@ import org.apache.kafka.common.serialization.{IntegerDeserializer, StringDeseria
 import scala.collection.JavaConverters._
 
 
-object ConsumerPlayground extends App {
+object Consumer extends App {
 
   val consumerProperties = new Properties()
   consumerProperties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
