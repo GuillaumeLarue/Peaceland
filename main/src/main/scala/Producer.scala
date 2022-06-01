@@ -1,5 +1,3 @@
-package ca.dataedu.kafka
-
 import java.util.Properties
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
@@ -10,15 +8,9 @@ object Producer extends App {
   val topicName = "test"
 
   val producerProperties = new Properties()
-  producerProperties.setProperty(
-    ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"
-  )
-  producerProperties.setProperty(
-    ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[IntegerSerializer].getName
-  )
-  producerProperties.setProperty(
-    ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer].getName
-  )
+  producerProperties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+  producerProperties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[IntegerSerializer].getName)
+  producerProperties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer].getName)
 
   val producer = new KafkaProducer[Int, String](producerProperties)
 
@@ -30,4 +22,5 @@ object Producer extends App {
   producer.send(new ProducerRecord[Int, String](topicName, 60, "60,S6"))
 
   producer.flush()
+  producer.close()
 }

@@ -1,15 +1,11 @@
-package ca.dataedu.kafka
-
 import java.time.Duration
-
 import org.apache.kafka.clients.consumer.ConsumerConfig._
-import java.util.Properties
 
+import java.util.Properties
 import org.apache.kafka.clients.consumer.{ConsumerRecord, ConsumerRecords, KafkaConsumer}
 import org.apache.kafka.common.serialization.{IntegerDeserializer, StringDeserializer}
 
-import scala.collection.JavaConverters._
-
+import java.util
 
 object Consumer extends App {
 
@@ -22,7 +18,7 @@ object Consumer extends App {
   consumerProperties.setProperty(ENABLE_AUTO_COMMIT_CONFIG, "false")
 
   val consumer = new KafkaConsumer[Int, String](consumerProperties)
-  consumer.subscribe(List("test").asJava)
+  consumer.subscribe(util.Arrays.asList("test"))
 
   println("| Key | Message | Partition | Offset |")
   while (true) {
