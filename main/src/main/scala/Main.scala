@@ -26,17 +26,6 @@ object Main {
 
     producer.close()
 
-    /*
-    // Code for consumer (see in the powerpoint given by the professor)
-    val props2: Properties = new Properties()
-    props2.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-    props2.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer])
-    props2.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer])
-    props2.put(ConsumerConfig.GROUP_ID_CONFIG, "myconsumergroup")
-
-    val consumer: KafkaConsumer[String, String] = new KafkaConsumer[String, String](props2)
-    #consumer.subscribe(List("my_topic_1", "my_topic_2").asJava)
-    */
     println("End")
   }
 }
