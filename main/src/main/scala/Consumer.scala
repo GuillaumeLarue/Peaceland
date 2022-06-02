@@ -1,44 +1,34 @@
-import Consumer.consumer
-
-import java.time.Duration
-import org.apache.kafka.clients.consumer.ConsumerConfig._
-
-import java.util.Properties
-import org.apache.kafka.clients.consumer.{ConsumerRecord, ConsumerRecords, KafkaConsumer}
+import org.apache.kafka.clients.consumer.{ConsumerConfig, ConsumerRecords, KafkaConsumer}
 import org.apache.kafka.common.serialization.{IntegerDeserializer, StringDeserializer}
 
+import java.time.Duration
 import java.util
+import java.util.Properties
+import scala.annotation.tailrec
+import scala.jdk.CollectionConverters.IterableHasAsScala
 
 object Consumer extends App {
+  val props: Properties = new Properties()
+  props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+  props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, classOf[IntegerDeserializer])
+  props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer])
+  props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
+  props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
-  val consumerProperties = new Properties()
-  consumerProperties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092") //It s possible to add URL but here is a local POC
-  consumerProperties.setProperty(GROUP_ID_CONFIG, "firstid")
-  consumerProperties.setProperty(KEY_DESERIALIZER_CLASS_CONFIG, classOf[IntegerDeserializer].getName)
-  consumerProperties.setProperty(VALUE_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer].getName)
-  consumerProperties.setProperty(AUTO_OFFSET_RESET_CONFIG, "earliest")
-  consumerProperties.setProperty(ENABLE_AUTO_COMMIT_CONFIG, "false")
+  props.put(ConsumerConfig.GROUP_ID_CONFIG, "myconsumergroup")
 
-  val consumer = new KafkaConsumer[Int, String](consumerProperties)
+  val consumer: KafkaConsumer[Int, String] = new KafkaConsumer[Int, String](props)
   consumer.subscribe(util.Arrays.asList("firsttopic"))
 
+  whiletrueconsumer(consumer)
   println("| Key | Message | Partition | Offset |")
 
-  keep_consumer(consumer)
-
-  def keep_consumer(consumer : KafkaConsumer[Int,String]): KafkaConsumer[Int,String] = {
-    val polledRecords: ConsumerRecords[Int, String] = consumer.poll(Duration.ofSeconds(1))
-    consumer.commitSync()
-    if (!polledRecords.isEmpty) {
-      println(s"Polled ${polledRecords.count()} records")
-      val recordIterator = polledRecords.iterator()
-      //Print so while is ok
-      while (recordIterator.hasNext) {
-        val record: ConsumerRecord[Int, String] = recordIterator.next()
-        println(s"| ${record.key()} | ${record.value()} | ${record.partition()} | ${record.offset()} |")
-      }
+  @tailrec def whiletrueconsumer(consumer: KafkaConsumer[Int, String]): Unit = {
+    val records: ConsumerRecords[Int, String] = consumer.poll(Duration.ofSeconds(1))
+    records.asScala.foreach { record =>
+      println(s"| ${record.key()} | ${record.value()} | ${record.partition()} | ${record.offset()} |")
     }
-    keep_consumer(consumer)
+    consumer.commitSync()
+    whiletrueconsumer(consumer)
   }
-
 }
