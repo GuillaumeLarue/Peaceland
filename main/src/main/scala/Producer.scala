@@ -1,5 +1,6 @@
-import java.util.Properties
+import model.Message
 
+import java.util.Properties
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 import org.apache.kafka.common.serialization.{IntegerSerializer, StringSerializer}
 
@@ -14,12 +15,12 @@ object Producer extends App {
 
   val producer = new KafkaProducer[Int, String](producerProperties)
 
-  producer.send(new ProducerRecord[Int, String](topicName, 10, "10,S1"))
-  producer.send(new ProducerRecord[Int, String](topicName, 20, "20,S2"))
-  producer.send(new ProducerRecord[Int, String](topicName, 30, "30,S3"))
-  producer.send(new ProducerRecord[Int, String](topicName, 40, "40,S4"))
-  producer.send(new ProducerRecord[Int, String](topicName, 50, "50,S5"))
-  producer.send(new ProducerRecord[Int, String](topicName, 60, "60,S6"))
+  producer.send(new ProducerRecord[Int, String](topicName, 1, new Message().toString))
+  producer.send(new ProducerRecord[Int, String](topicName, 2, new Message().toString))
+  producer.send(new ProducerRecord[Int, String](topicName, 3, new Message().toString))
+  producer.send(new ProducerRecord[Int, String](topicName, 4, new Message().toString))
+  producer.send(new ProducerRecord[Int, String](topicName, 5, new Message().toString))
+  producer.send(new ProducerRecord[Int, String](topicName, 6, new Message().toString))
 
   producer.flush()
   producer.close()

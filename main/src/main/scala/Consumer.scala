@@ -32,6 +32,7 @@ object Consumer extends App {
     if (!polledRecords.isEmpty) {
       println(s"Polled ${polledRecords.count()} records")
       val recordIterator = polledRecords.iterator()
+      //Print so while is ok
       while (recordIterator.hasNext) {
         val record: ConsumerRecord[Int, String] = recordIterator.next()
         println(s"| ${record.key()} | ${record.value()} | ${record.partition()} | ${record.offset()} |")

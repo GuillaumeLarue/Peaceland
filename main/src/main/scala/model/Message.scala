@@ -8,7 +8,7 @@ class Message(val timestampArg: LocalDateTime = LocalDateTime.now(),
               val peacewatcherLatArg: Double = (-90 * 10000 + scala.util.Random.nextInt(180 * 10000).toFloat) / 10000,
               val citoyenIdArg: Long = scala.util.Random.nextInt(8000000),
               val citoyenPeacescoreArg: Int = scala.util.Random.nextInt(100)) {
-  //override def toString: String = {
-  //  "timestampArg:"+ timestampArg + "; peacewatcherID:"+ peacewatcherIdArg + "; peacewatcherLongArg:"+ peacewatcherLongArg + "; peacewatcherLatArg:" + peacewatcherLatArg + "; citoyenIdArg:"+ citoyenIdArg + "; citoyenPeacescoreArg:" + citoyenPeacescoreArg
-  //}
+  override def toString: String = {
+    "timestampArg:"+ timestampArg + "; peacewatcherID:"+ peacewatcherIdArg + "; peacewatcherLongArg:"+ peacewatcherLongArg + "; peacewatcherLatArg:" + peacewatcherLatArg + "; citoyenIdArg:"+ citoyenIdArg + "; citoyenPeacescoreArg:" + citoyenPeacescoreArg
+  }
 }
