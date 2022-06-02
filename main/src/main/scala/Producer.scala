@@ -5,7 +5,7 @@ import org.apache.kafka.common.serialization.{IntegerSerializer, StringSerialize
 
 object Producer extends App {
 
-  val topicName = "test"
+  val topicName = "firsttopic"
 
   val producerProperties = new Properties()
   producerProperties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")

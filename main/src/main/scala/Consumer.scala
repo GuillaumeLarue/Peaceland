@@ -1,3 +1,5 @@
+import Consumer.consumer
+
 import java.time.Duration
 import org.apache.kafka.clients.consumer.ConsumerConfig._
 
@@ -10,18 +12,21 @@ import java.util
 object Consumer extends App {
 
   val consumerProperties = new Properties()
-  consumerProperties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-  consumerProperties.setProperty(GROUP_ID_CONFIG, "test123")
+  consumerProperties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092") //It s possible to add URL but here is a local POC
+  consumerProperties.setProperty(GROUP_ID_CONFIG, "firstid")
   consumerProperties.setProperty(KEY_DESERIALIZER_CLASS_CONFIG, classOf[IntegerDeserializer].getName)
   consumerProperties.setProperty(VALUE_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer].getName)
   consumerProperties.setProperty(AUTO_OFFSET_RESET_CONFIG, "earliest")
   consumerProperties.setProperty(ENABLE_AUTO_COMMIT_CONFIG, "false")
 
   val consumer = new KafkaConsumer[Int, String](consumerProperties)
-  consumer.subscribe(util.Arrays.asList("test"))
+  consumer.subscribe(util.Arrays.asList("firsttopic"))
 
   println("| Key | Message | Partition | Offset |")
-  while (true) {
+
+  keep_consumer(consumer)
+
+  def keep_consumer(consumer : KafkaConsumer[Int,String]): KafkaConsumer[Int,String] = {
     val polledRecords: ConsumerRecords[Int, String] = consumer.poll(Duration.ofSeconds(1))
     consumer.commitSync()
     if (!polledRecords.isEmpty) {
@@ -32,6 +37,7 @@ object Consumer extends App {
         println(s"| ${record.key()} | ${record.value()} | ${record.partition()} | ${record.offset()} |")
       }
     }
+    keep_consumer(consumer)
   }
 
 }
