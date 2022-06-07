@@ -1,11 +1,10 @@
-import org.apache.kafka.clients.consumer.{ConsumerConfig, ConsumerRecords, KafkaConsumer}
+import org.apache.kafka.clients.consumer.{ConsumerConfig, ConsumerRecord, KafkaConsumer}
 import org.apache.kafka.common.serialization.{IntegerDeserializer, StringDeserializer}
 
 import java.time.Duration
 import java.util
 import java.util.Properties
 import scala.annotation.tailrec
-import scala.jdk.CollectionConverters.IterableHasAsScala
 
 object Consumer extends App {
   val props: Properties = new Properties()
@@ -20,15 +19,24 @@ object Consumer extends App {
   val consumer: KafkaConsumer[Int, String] = new KafkaConsumer[Int, String](props)
   consumer.subscribe(util.Arrays.asList("firsttopic"))
 
-  whiletrueconsumer(consumer)
+
   println("| Key | Message | Partition | Offset |")
 
-  @tailrec def whiletrueconsumer(consumer: KafkaConsumer[Int, String]): Unit = {
-    val records: ConsumerRecords[Int, String] = consumer.poll(Duration.ofSeconds(1))
-    records.asScala.foreach { record =>
+  @tailrec
+  def forEachIterator(recordsIterator: util.Iterator[ConsumerRecord[Int, String]]): Unit = {
+    if (recordsIterator.hasNext) {
+      val record = recordsIterator.next()
       println(s"| ${record.key()} | ${record.value()} | ${record.partition()} | ${record.offset()} |")
+      forEachIterator(recordsIterator)
     }
-    consumer.commitSync()
-    whiletrueconsumer(consumer)
   }
+
+  @tailrec
+  def whileTrue(consumer: KafkaConsumer[Int, String]): Unit = {
+    val recordsIterator: util.Iterator[ConsumerRecord[Int, String]] = consumer.poll(Duration.ofSeconds(1)).iterator()
+    forEachIterator(recordsIterator)
+    consumer.commitSync()
+    whileTrue(consumer)
+  }
+  whileTrue(consumer)
 }
