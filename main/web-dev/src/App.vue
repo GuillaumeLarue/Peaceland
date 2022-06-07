@@ -16,12 +16,12 @@ export default {
   },
   data() {
     return {
-      alerts: [require('/Users/youennloie/WebstormProjects/untitled/src/assets/alert.json')]
+      alerts: [require('./assets/alert.json')]
     }
   },
   methods: {
     addAlert() {
-      this.alerts.push(require('/Users/youennloie/WebstormProjects/untitled/src/assets/alert.json'))
+      this.alerts.push(require('./assets/alert.json'))
     }
   }
 }

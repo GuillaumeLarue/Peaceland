@@ -42,12 +42,6 @@ export default {
     alert: Object,
   },
   methods: {
-    addPrice() {
-      console.log('clic')
-      let json = require('/Users/youennloie/WebstormProjects/untitled/package.json')
-      console.log(json.name)
-      console.log(json);
-    },
     onClick() {
       return this.$emit('Click')
     }
