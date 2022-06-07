@@ -6,41 +6,33 @@ import java.util
 import java.util.Properties
 import scala.annotation.tailrec
 import scala.jdk.CollectionConverters.IterableHasAsScala
-
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.streaming.Trigger
 
 object Consumer extends App {
 
   val spark = SparkSession.builder()
-    .master("local[1]")
+    .master("local[4]")
     .appName("SparkByExample")
+    .config("spark.driver.bindAddress", "127.0.0.5")
     .getOrCreate()
 
-  println("First SparkContext:")
-  println("APP Name :" + spark.sparkContext.appName)
-  println("Master :" + spark.sparkContext.master)
 
-  val props: Properties = new Properties()
-  props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-  props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, classOf[IntegerDeserializer])
-  props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer])
-  props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
-  props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+  val df = spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "firsttopic")
+    .option("startingOffsets","earliest")
+    .load()
 
-  props.put(ConsumerConfig.GROUP_ID_CONFIG, "myconsumergroup")
 
-  val consumer: KafkaConsumer[Int, String] = new KafkaConsumer[Int, String](props)
-  consumer.subscribe(util.Arrays.asList("firsttopic"))
+  df.writeStream
+      .trigger(Trigger.ProcessingTime("15 secondes"))
+      .format("parquet") //voir si ya plus adapté
+      .option("path", "path of the datalake") //local mais fonctionne exactement pareille ex: "hdfs//namenode:namenode-port/tmp/datalake/RidesRaw"
+      .option("checkpointLocation", "checkpointHdfsPath") //ex: "hdfs//namenode:namenode-port/tmp/checkpoints/RidesRaw"
+      .outputMode("append")
+      .start()
 
-  whiletrueconsumer(consumer)
-  println("| Key | Message | Partition | Offset |")
-
-  @tailrec def whiletrueconsumer(consumer: KafkaConsumer[Int, String]): Unit = {
-    val records: ConsumerRecords[Int, String] = consumer.poll(Duration.ofSeconds(1))
-    records.asScala.foreach { record =>
-      println(s"| ${record.key()} | ${record.value()} | ${record.partition()} | ${record.offset()} |")
-    }
-    consumer.commitSync()
-    whiletrueconsumer(consumer)
-  }
 }
