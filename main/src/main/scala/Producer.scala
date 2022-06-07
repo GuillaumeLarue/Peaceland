@@ -3,6 +3,8 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, Produce
 import org.apache.kafka.common.serialization.{IntegerSerializer, StringSerializer}
 
 import java.util.Properties
+import scala.annotation.tailrec
+
 
 object Producer extends App {
 
@@ -15,13 +17,16 @@ object Producer extends App {
 
   val producer: KafkaProducer[Int, String] = new KafkaProducer[Int, String](props)
 
-  producer.send(new ProducerRecord[Int, String](topicName, 1, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 2, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 3, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 4, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 5, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 6, new Message().toString))
+  val nbrMessage: Int = 25
 
-  producer.flush()
-  producer.close()
+  @tailrec
+  def whileTrue(producer: KafkaProducer[Int, String], n: Int): Unit = n match {
+    case 0 => producer.close()
+    case _ =>
+      producer.send(new ProducerRecord[Int, String](topicName, nbrMessage - n + 1, new Message().toString))
+      producer.flush()
+      whileTrue(producer, n - 1)
+  }
+
+  whileTrue(producer, nbrMessage)
 }
