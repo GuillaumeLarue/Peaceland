@@ -26,13 +26,23 @@ object Consumer extends App {
     .option("startingOffsets","earliest")
     .load()
 
-
   df.writeStream
-      .trigger(Trigger.ProcessingTime("15 secondes"))
+    .trigger(Trigger.ProcessingTime("15 seconds"))
+    .outputMode("update")
+    .format("console")
+    .start()
+    .awaitTermination()
+
+  /* Useful to push in hdfs
+  df.writeStream
+      .trigger(Trigger.ProcessingTime("15 seconds"))
       .format("parquet") //voir si ya plus adapté
-      .option("path", "path of the datalake") //local mais fonctionne exactement pareille ex: "hdfs//namenode:namenode-port/tmp/datalake/RidesRaw"
-      .option("checkpointLocation", "checkpointHdfsPath") //ex: "hdfs//namenode:namenode-port/tmp/checkpoints/RidesRaw"
+      .option("path", "file:/home/trabet/peaceland/hdfs") //local mais fonctionne exactement pareille ex: "hdfs//namenode:namenode-port/tmp/datalake/RidesRaw"
+      .option("checkpointLocation", "file:/home/trabet/peaceland/checkpoint") //ex: "hdfs//namenode:namenode-port/tmp/checkpoints/RidesRaw"
       .outputMode("append")
-      .start()
+      .start()*/
+
+
+
 
 }
