@@ -1,6 +1,5 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{base64, col, unbase64, when}
-import org.apache.spark.sql.types._
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -17,16 +16,14 @@ object Main {
     df.printSchema()
     df.show(false)
 
-
     val decoded_df = df
       .withColumn(
-      "value",
-      when(
-        base64(unbase64(col("value"))) === col("value"),
-        unbase64(col("value")).cast("string")
-      ).otherwise(col("value"))
-    )
-
+        "value",
+        when(
+          base64(unbase64(col("value"))) === col("value"),
+          unbase64(col("value")).cast("string")
+        ).otherwise(col("value"))
+      )
     decoded_df.printSchema()
     decoded_df.show(false)
   }
