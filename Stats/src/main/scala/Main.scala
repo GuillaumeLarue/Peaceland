@@ -2,11 +2,8 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{FloatType, IntegerType, TimestampType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-import java.io.File
-
 object Main {
   def main(args: Array[String]): Unit = {
-
     val spark = SparkSession.builder()
       .master("local[4]")
       .appName("SparkByExample")
@@ -19,8 +16,8 @@ object Main {
         .option("mergeSchema", "true")
         .load(path + "*.json")
         .select("value")
+        .
     }
-
 
     def decodeFile(df: DataFrame): DataFrame = {
       df
@@ -44,27 +41,45 @@ object Main {
         .drop("value")
     }
 
-
-    def getListOfFiles(dir: String): List[String] = {
-      val file = new File(dir)
-      file.listFiles.filter(_.isFile)
-        .filter(_.getName.endsWith(".json"))
-        .map(_.getPath).toList
-    }
-
     val df = readFile("/tmp/hdfs/")
     val decode_df = decodeFile(df)
     val final_df = getCol(decode_df)
+    final_df.printSchema()
     final_df.show(50, truncate = false)
 
     /*
-    TODO: create functions for questions
     Question 1: how many reports on average per day ?
-    Question 2: angry evening, morning or night ?
+    TODO Question 2: angry evening, morning or night ?
     Question 3: what is the day with the biggest number of angry people ?
-    Question 4: what is the ratio of alert ?
-    Question 5: what is the average of Peacescore ?
+    TODO Question 4: what is the ratio of alert ?
+    TODO Question 5: what is the average of Peacescore ?
      */
 
+    // Question 1: how many reports on average per day ?
+    def AverageNumberReportByDay(df: DataFrame): DataFrame = {
+      df.select(date_format(col("timestamp"), "yyyy-MM-dd")
+        .alias("day"))
+        .groupBy("day")
+        .count()
+        .groupBy("count")
+        .avg()
+      // .take(1)(0)
+      // .getAs[Float]("avg")
+    }
+    // println(AverageNumberReportByDay(final_df))
+    AverageNumberReportByDay(final_df).show(false)
+
+    // Question 3: what is the day with the biggest number of angry people ?
+    def DayWithBiggestAngry(df: DataFrame): DataFrame = {
+      df.withColumn("dayofweek", dayofweek(col("timestamp")))
+        .filter(col("citizenPeacescore") <= 20)
+        .groupBy("dayofweek")
+        .count()
+    }
+
+    DayWithBiggestAngry(final_df).show(false)
+
+    // Question 5: what is the average of Peacescore ?
+    // def AveragePeaceScore(df : DataFrame)
   }
 }
