@@ -68,6 +68,13 @@ object Main {
     // println(AverageNumberReportByDay(final_df))
     AverageNumberReportByDay(final_df).show(false)
 
+    //Question 2: angry evening, morning or night ?
+    def TimeToBeAngry(df: DataFrame): DataFrame = {
+      df.filter(col("citizenPeacescore") <= 20)
+        .groupBy(hour(col("timestamp")).alias("day_hour"))
+        .count().alias("tot")
+    }
+
     // Question 3: what is the day with the biggest number of angry people ?
     def DayWithBiggestAngry(df: DataFrame): DataFrame = {
       df.withColumn("dayofweek", dayofweek(col("timestamp")))
@@ -78,7 +85,16 @@ object Main {
 
     DayWithBiggestAngry(final_df).show(false)
 
+    // Question 4: what is the ratio of alert ?
+    def RatioAlert(df: DataFrame): Float = {
+      df.filter(col("citizenPeacescore") <= 20).count() / df.count()
+    }
+
+    RatioAlert(final_df)
+
     // Question 5: what is the average of Peacescore ?
-    // def AveragePeaceScore(df : DataFrame)
+    def AveragePeaceScore(df : DataFrame): DataFrame = {
+      df.select(mean("citizenPeacescore"))
+    }
   }
 }
