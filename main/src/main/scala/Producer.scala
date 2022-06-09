@@ -15,12 +15,12 @@ object Producer extends App {
 
   val producer: KafkaProducer[Int, String] = new KafkaProducer[Int, String](props)
 
-  producer.send(new ProducerRecord[Int, String](topicName, 1, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 2, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 3, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 4, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 5, new Message().toString))
-  producer.send(new ProducerRecord[Int, String](topicName, 6, new Message().toString))
+  producer.send(new ProducerRecord[Int, String](topicName, 1, new Message().toCSV))
+  producer.send(new ProducerRecord[Int, String](topicName, 2, new Message().toCSV))
+  producer.send(new ProducerRecord[Int, String](topicName, 3, new Message().toCSV))
+  producer.send(new ProducerRecord[Int, String](topicName, 4, new Message().toCSV))
+  producer.send(new ProducerRecord[Int, String](topicName, 5, new Message().toCSV))
+  producer.send(new ProducerRecord[Int, String](topicName, 6, new Message().toCSV))
 
   producer.flush()
   producer.close()
