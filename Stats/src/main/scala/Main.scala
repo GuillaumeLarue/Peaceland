@@ -16,7 +16,6 @@ object Main {
         .option("mergeSchema", "true")
         .load(path + "*.json")
         .select("value")
-        .
     }
 
     def decodeFile(df: DataFrame): DataFrame = {
