@@ -1,11 +1,11 @@
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{FloatType, IntegerType, TimestampType}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.io.File
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val path: String = "/tmp/hdfs/part-00000-7debf7b8-c570-4bcd-bde8-21079c7116a1-c000.json"
 
     val spark = SparkSession.builder()
       .master("local[4]")
@@ -13,32 +13,36 @@ object Main {
       .config("spark.driver.bindAddress", "127.0.0.1")
       .getOrCreate()
 
-    val df = spark.read
-      .json(path = path).select("value")
-    df.printSchema()
-    df.show(false)
+    def readFile(path: String): DataFrame = {
+      spark.read
+        .format("json")
+        .option("mergeSchema", "true")
+        .load(path + "*.json")
+        .select("value")
+    }
 
-    val decoded_df = df
-      .withColumn(
-        "value",
-        when(
-          base64(unbase64(col("value"))) === col("value"),
-          unbase64(col("value")).cast("string")
-        ).otherwise(col("value"))
-      )
-    decoded_df.printSchema()
-    decoded_df.show(false)
 
-    val mul_col_df = decoded_df
-      .withColumn("timestamp", split(col("value"), ";").getItem(0))
-      .withColumn("peacewatcherID", split(col("value"), ";").getItem(1))
-      .withColumn("peacewatcherLong", split(col("value"), ";").getItem(2))
-      .withColumn("peacewatcherLat", split(col("value"), ";").getItem(3))
-      .withColumn("citizenId", split(col("value"), ";").getItem(4))
-      .withColumn("citizenPeacescore", split(col("value"), ";").getItem(5))
-      .drop("value")
+    def decodeFile(df: DataFrame): DataFrame = {
+      df
+        .withColumn(
+          "value",
+          when(
+            base64(unbase64(col("value"))) === col("value"),
+            unbase64(col("value")).cast("string")
+          ).otherwise(col("value"))
+        )
+    }
 
-    mul_col_df.show(false)
+    def getCol(decoded_df: DataFrame): DataFrame = {
+      decoded_df
+        .withColumn("timestamp", split(col("value"), ";").getItem(0).cast(TimestampType))
+        .withColumn("peacewatcherID", split(col("value"), ";").getItem(1).cast(IntegerType))
+        .withColumn("peacewatcherLong", split(col("value"), ";").getItem(2).cast(FloatType))
+        .withColumn("peacewatcherLat", split(col("value"), ";").getItem(3).cast(FloatType))
+        .withColumn("citizenId", split(col("value"), ";").getItem(4).cast(IntegerType))
+        .withColumn("citizenPeacescore", split(col("value"), ";").getItem(5).cast(IntegerType))
+        .drop("value")
+    }
 
 
     def getListOfFiles(dir: String): List[String] = {
@@ -48,6 +52,19 @@ object Main {
         .map(_.getPath).toList
     }
 
-    println(getListOfFiles("/tmp/hdfs"))
+    val df = readFile("/tmp/hdfs/")
+    val decode_df = decodeFile(df)
+    val final_df = getCol(decode_df)
+    final_df.show(50, truncate = false)
+
+    /*
+    TODO: create functions for questions
+    Question 1: how many reports on average per day ?
+    Question 2: angry evening, morning or night ?
+    Question 3: what is the day with the biggest number of angry people ?
+    Question 4: what is the ratio of alert ?
+    Question 5: what is the average of Peacescore ?
+     */
+
   }
 }
