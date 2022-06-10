@@ -7,7 +7,7 @@ object Consumer extends App {
   val spark = SparkSession.builder()
     .master("local[4]")
     .appName("SparkByExample")
-    .config("spark.driver.bindAddress", "127.0.0.5")
+    .config("spark.driver.bindAddress", "127.0.0.1")
     .getOrCreate()
 
   val df = spark

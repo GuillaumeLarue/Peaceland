@@ -1,9 +1,14 @@
+import org.apache.log4j.Level
+import org.apache.log4j.Logger
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{FloatType, IntegerType, TimestampType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object Main {
   def main(args: Array[String]): Unit = {
+
+    Logger.getRootLogger.setLevel(Level.OFF)
+
     val spark = SparkSession.builder()
       .master("local[4]")
       .appName("SparkByExample")
