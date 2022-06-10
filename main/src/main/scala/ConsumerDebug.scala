@@ -6,7 +6,7 @@ import java.util
 import java.util.Properties
 import scala.annotation.tailrec
 
-object Consumer extends App {
+object ConsumerDebug extends App {
   val props: Properties = new Properties()
   props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
   props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, classOf[IntegerDeserializer])
