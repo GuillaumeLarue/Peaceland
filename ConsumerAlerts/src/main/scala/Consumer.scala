@@ -4,7 +4,6 @@ import org.apache.spark.sql.streaming.Trigger
 
 object Consumer extends App {
 
-
   val spark = SparkSession.builder()
     .master("local[4]")
     .appName("SparkByExample")
@@ -19,7 +18,6 @@ object Consumer extends App {
     .option("startingOffsets", "earliest")
     .load()
     .select("value")
-
 
   df.writeStream
     .trigger(Trigger.ProcessingTime("15 seconds"))
