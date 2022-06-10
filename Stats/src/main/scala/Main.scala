@@ -48,32 +48,34 @@ object Main {
 
     /*
     Question 1: how many reports on average per day ?
-    TODO Question 2: angry evening, morning or night ?
+    Question 2: angry evening, morning or night ?
     Question 3: what is the day with the biggest number of angry people ?
-    TODO Question 4: what is the ratio of alert ?
-    TODO Question 5: what is the average of Peacescore ?
+    Question 4: what is the ratio of alert ?
+    Question 5: what is the average of Peacescore ?
      */
 
     // Question 1: how many reports on average per day ?
-    def AverageNumberReportByDay(df: DataFrame): DataFrame = {
-      df.select(date_format(col("timestamp"), "yyyy-MM-dd")
+    def AverageNumberReportByDay(df: DataFrame): Double = {
+      val tmp_df = df.select(date_format(col("timestamp"), "yyyy-MM-dd")
         .alias("day"))
         .groupBy("day")
         .count()
         .groupBy("count")
         .avg()
-      // .take(1)(0)
-      // .getAs[Float]("avg")
+      tmp_df.select(mean("avg(count)"))
+        .take(1)(0)
+        .getAs[Double]("avg(avg(count))")
     }
-    // println(AverageNumberReportByDay(final_df))
-    AverageNumberReportByDay(final_df).show(false)
+    val averageNumberReportByDay = AverageNumberReportByDay(final_df)
 
     //Question 2: angry evening, morning or night ?
     def TimeToBeAngry(df: DataFrame): DataFrame = {
       df.filter(col("citizenPeacescore") <= 20)
         .groupBy(hour(col("timestamp")).alias("day_hour"))
-        .count().alias("tot")
+        .count()
+        .alias("tot")
     }
+    val dfTimeAtAngry = TimeToBeAngry(final_df)
 
     // Question 3: what is the day with the biggest number of angry people ?
     def DayWithBiggestAngry(df: DataFrame): DataFrame = {
@@ -83,18 +85,42 @@ object Main {
         .count()
     }
 
-    DayWithBiggestAngry(final_df).show(false)
+    val dfDayWithBiggestAngry = DayWithBiggestAngry(final_df)
 
     // Question 4: what is the ratio of alert ?
     def RatioAlert(df: DataFrame): Float = {
-      df.filter(col("citizenPeacescore") <= 20).count() / df.count()
+      df.filter(col("citizenPeacescore") <= 20).count() / df.count().toFloat
     }
-
-    RatioAlert(final_df)
+    val ratioAlert = RatioAlert(final_df)
 
     // Question 5: what is the average of Peacescore ?
-    def AveragePeaceScore(df : DataFrame): DataFrame = {
-      df.select(mean("citizenPeacescore"))
+    def AveragePeaceScore(df: DataFrame): DataFrame = {
+      df
+        //.groupBy(col("citizenId"))
+        .select(mean("citizenPeacescore"))
+        .alias("averageCitizenPeacescore")
     }
+    val dfAveragePeaceScore = AveragePeaceScore(final_df)
+
+
+
+    println("Question 1: how many reports on average per day ? ")
+    print(averageNumberReportByDay)
+
+    println("Question 2: angry evening, morning or night ?")
+    dfTimeAtAngry.show(false)
+
+
+    println("Question 3: what is the day with the biggest number of angry people ?")
+    dfDayWithBiggestAngry.show(false)
+
+
+    println("Question 4: what is the ratio of alert ?")
+    println(ratioAlert)
+
+
+    println("Question 5: what is the average of Peacescore ?")
+    dfAveragePeaceScore.show(false)
+
   }
 }

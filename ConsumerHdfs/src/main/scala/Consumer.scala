@@ -17,6 +17,7 @@ object Consumer extends App {
     .option("subscribe", "firsttopic")
     .option("startingOffsets", "earliest")
     .load()
+    .select("value")
 
   df.writeStream
     .trigger(Trigger.ProcessingTime("15 seconds"))
