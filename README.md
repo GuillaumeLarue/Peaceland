@@ -52,7 +52,12 @@ Point importants:
 
 Suite à ces réflexions, voici l'architecture que nous proposons
 
-![](images/Architecture_spark.PNG)
+![Architecture spark](images/Architecture_spark.PNG)
+
+## Results of questions
+
+![Results questions](images/ResStats.png)
+
 
 ## Authors
 - Guillaume LARUE
