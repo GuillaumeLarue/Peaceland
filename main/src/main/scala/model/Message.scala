@@ -2,12 +2,12 @@ package model
 
 import java.time.LocalDateTime
 
-class Message(val timestamp: LocalDateTime,
-              val peacewatcherId: Long = scala.util.Random.nextInt(500000),
-              val peacewatcherLong: Double,
-              val peacewatcherLat: Double,
-              val citizenId: Long,
-              val citizenPeacescore: Int) {
+case class Message(timestamp: LocalDateTime,
+                   peacewatcherId: Long,
+                   peacewatcherLong: Double,
+                   peacewatcherLat: Double,
+                   citizenId: Long,
+                   citizenPeacescore: Int) {
 
   def this() = this(LocalDateTime.now(),
     scala.util.Random.nextInt(500000),

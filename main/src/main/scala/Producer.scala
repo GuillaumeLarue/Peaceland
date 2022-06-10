@@ -1,4 +1,4 @@
-import model.Message
+import model.{Citizen, Drone, Message}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 import org.apache.kafka.common.serialization.{IntegerSerializer, StringSerializer}
 
@@ -18,6 +18,28 @@ object Producer extends App {
   val producer: KafkaProducer[Int, String] = new KafkaProducer[Int, String](props)
 
   val nbrMessage: Int = 25
+  val nbrDrone: Int = 10
+  val nbrCitizen: Int = 15
+
+  def generateDrone(n: Int): List[Drone] = {
+    @tailrec
+    def genDrone(acc: List[Drone], n: Int): List[Drone] = n match {
+      case 0 => acc
+      case _ => genDrone(new Drone(nbrDrone - n + 1) :: acc, n - 1)
+    }
+
+    genDrone(Nil, n)
+  }
+
+  def generateCitizen(n: Int): List[Citizen] = {
+    @tailrec
+    def genCitizen(acc: List[Citizen], n: Int): List[Citizen] = n match {
+      case 0 => acc
+      case _ => genCitizen(new Citizen(nbrCitizen - n + 1) :: acc, n - 1)
+    }
+
+    genCitizen(Nil, n)
+  }
 
   @tailrec
   def whileTrue(producer: KafkaProducer[Int, String], n: Int): Unit = n match {
