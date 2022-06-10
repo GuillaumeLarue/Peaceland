@@ -25,9 +25,22 @@ case class Message(timestamp: LocalDateTime,
       "; peacewatcherLat:" + peacewatcherLat +
       "; citizenId:" + citizenId +
       "; citizenPeacescore:" + citizenPeacescore
+  }
+
+  def toJson: String = {
+    s"""
+       {
+         "timestamp": $timestamp,
+         "peacewatcherID": $peacewatcherId,
+         "peacewatcherLong": $peacewatcherLong,
+         "peacewatcherLat":$peacewatcherLat,
+         "citizenId": $citizenId,
+         "citizenPeacescore": $citizenPeacescore,
+       }
+     """
+  }
 
   def toCSV: String = {
-    timestampArg + ";" + peacewatcherIdArg + ";" + peacewatcherLongArg + ";" + peacewatcherLatArg + ";" + citoyenIdArg + ";" + citoyenPeacescoreArg
-
+    timestamp + ";" + peacewatcherId + ";" + peacewatcherLong + ";" + peacewatcherLat + ";" + citizenId + ";" + citizenPeacescore
   }
 }
