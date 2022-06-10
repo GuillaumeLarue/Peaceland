@@ -54,6 +54,18 @@ Suite à ces réflexions, voici l'architecture que nous proposons
 
 ![Architecture spark](images/Architecture_spark.PNG)
 
+## Mise en place
+
+Dans une premiere partie nous gérons les alertes:
+Pour une solution temporaire, nous stockons les alertes dans un datalake dans lequel nous venons lire.
+
+La deuxieme partie permet de répondre à des qestions que nous pouvons nous poser:
+Pour cela, apres avoir stocké les streams dans un datalake HDFS, nous les chargeons sous formes de dataframe avant de faire nos opérations dessus.
+
+## Gestion des alertes
+
+![Front alertes](images/front.png)
+
 ## Results of questions
 
 ![Results questions](images/ResStats.png)
