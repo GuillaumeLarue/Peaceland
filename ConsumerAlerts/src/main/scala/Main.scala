@@ -34,8 +34,8 @@ object Main {
         )
     }
 
-    def getCol(decoded_df: DataFrame): DataFrame = {
-      decoded_df
+    def getCol(decodedDf: DataFrame): DataFrame = {
+      decodedDf
         .withColumn("timestamp", split(col("value"), ";").getItem(0).cast(TimestampType))
         .withColumn("peacewatcherID", split(col("value"), ";").getItem(1).cast(IntegerType))
         .withColumn("peacewatcherLong", split(col("value"), ";").getItem(2).cast(FloatType))
@@ -46,12 +46,12 @@ object Main {
     }
 
     val df = readFile("/tmp/hdfs/")
-    val decode_df = decodeFile(df)
-    val final_df = getCol(decode_df).filter(col("citizenPeacescore") <= 20)
-    final_df.printSchema()
-    final_df.show(50, truncate = false)
+    val decodeDf = decodeFile(df)
+    val finalDf = getCol(decodeDf).filter(col("citizenPeacescore") <= 20)
+    finalDf.printSchema()
+    finalDf.show(50, truncate = false)
 
-    final_df.write.json("/tmp/dfJson")
+    finalDf.write.json("/tmp/dfJson")
 
   }
 }
