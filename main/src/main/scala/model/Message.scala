@@ -2,6 +2,7 @@ package model
 
 import java.time.LocalDateTime
 
+
 case class Message(timestamp: LocalDateTime,
                    peacewatcherId: Long,
                    peacewatcherLong: Double,
@@ -24,5 +25,9 @@ case class Message(timestamp: LocalDateTime,
       "; peacewatcherLat:" + peacewatcherLat +
       "; citizenId:" + citizenId +
       "; citizenPeacescore:" + citizenPeacescore
+
+  def toCSV: String = {
+    timestampArg + ";" + peacewatcherIdArg + ";" + peacewatcherLongArg + ";" + peacewatcherLatArg + ";" + citoyenIdArg + ";" + citoyenPeacescoreArg
+
   }
 }

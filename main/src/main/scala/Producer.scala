@@ -45,7 +45,7 @@ object Producer extends App {
   def whileTrue(producer: KafkaProducer[Int, String], n: Int): Unit = n match {
     case 0 => producer.close()
     case _ =>
-      producer.send(new ProducerRecord[Int, String](topicName, nbrMessage - n + 1, new Message().toString))
+      producer.send(new ProducerRecord[Int, String](topicName, nbrMessage - n + 1, new Message().toCSV))
       producer.flush()
       whileTrue(producer, n - 1)
   }
