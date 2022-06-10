@@ -47,7 +47,7 @@ object Main {
 
     val df = readFile("/tmp/hdfs/")
     val decode_df = decodeFile(df)
-    val final_df = getCol(decode_df)
+    val final_df = getCol(decode_df).filter(col("citizenPeacescore") <= 20)
     final_df.printSchema()
     final_df.show(50, truncate = false)
 
