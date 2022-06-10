@@ -1,5 +1,4 @@
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{FloatType, IntegerType, TimestampType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -34,8 +33,8 @@ object Main {
         )
     }
 
-    def getCol(decoded_df: DataFrame): DataFrame = {
-      decoded_df
+    def getCol(decodedDf: DataFrame): DataFrame = {
+      decodedDf
         .withColumn("timestamp", split(col("value"), ";").getItem(0).cast(TimestampType))
         .withColumn("peacewatcherID", split(col("value"), ";").getItem(1).cast(IntegerType))
         .withColumn("peacewatcherLong", split(col("value"), ";").getItem(2).cast(FloatType))
@@ -46,26 +45,26 @@ object Main {
     }
 
     val df = readFile("/tmp/hdfs/")
-    val decode_df = decodeFile(df)
-    val final_df = getCol(decode_df)
-    final_df.printSchema()
-    final_df.show(50, truncate = false)
+    val decodeDf = decodeFile(df)
+    val finalDf = getCol(decodeDf)
+    finalDf.printSchema()
+    finalDf.show(50, truncate = false)
 
 
     // Question 1: how many reports on average per day ?
     def AverageNumberReportByDay(df: DataFrame): Double = {
-      val tmp_df = df.select(date_format(col("timestamp"), "yyyy-MM-dd")
+      val tmpDf = df.select(date_format(col("timestamp"), "yyyy-MM-dd")
         .alias("day"))
         .groupBy("day")
         .count()
         .groupBy("count")
         .avg()
-      tmp_df.select(mean("avg(count)"))
+      tmpDf.select(mean("avg(count)"))
         .take(1)(0)
         .getAs[Double]("avg(avg(count))")
     }
 
-    val averageNumberReportByDay = AverageNumberReportByDay(final_df)
+    val averageNumberReportByDay = AverageNumberReportByDay(finalDf)
 
     //Question 2: angry evening, morning or night ?
     def TimeToBeAngry(df: DataFrame): DataFrame = {
@@ -75,7 +74,7 @@ object Main {
         .alias("tot")
     }
 
-    val dfTimeAtAngry = TimeToBeAngry(final_df)
+    val dfTimeAtAngry = TimeToBeAngry(finalDf)
 
     // Question 3: what is the day with the biggest number of angry people ?
     def DayWithBiggestAngry(df: DataFrame): DataFrame = {
@@ -86,15 +85,14 @@ object Main {
     }
 
 
-
-    val dfDayWithBiggestAngry = DayWithBiggestAngry(final_df)
+    val dfDayWithBiggestAngry = DayWithBiggestAngry(finalDf)
 
     // Question 4: what is the ratio of alert ?
     def RatioAlert(df: DataFrame): Float = {
       df.filter(col("citizenPeacescore") <= 20).count() / df.count().toFloat
     }
 
-    val ratioAlert = RatioAlert(final_df)
+    val ratioAlert = RatioAlert(finalDf)
 
     // Question 5: what is the average of Peacescore ?
     def AveragePeaceScore(df: DataFrame): DataFrame = {
@@ -104,7 +102,7 @@ object Main {
         .alias("averageCitizenPeacescore")
     }
 
-    val dfAveragePeaceScore = AveragePeaceScore(final_df)
+    val dfAveragePeaceScore = AveragePeaceScore(finalDf)
 
 
     println("Question 1: how many reports on average per day ? ")
