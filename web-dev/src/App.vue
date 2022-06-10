@@ -1,22 +1,33 @@
 <template>
   <div>
     <button @click="addAlert">add alert</button>
-    <HelloWorld v-for="alert in alerts " :alert="alert" v-bind:key="alert"/>
+    <Alert v-for="alert in alerts" :alert="alert" v-bind:key="alert"/>
   </div>
-
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Alert from './components/Alert.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Alert
   },
   data() {
     return {
-      alerts: [require('./assets/alert.json')]
+      alerts: [require('./assets/alert.json')],
+      connection: null
+    }
+  },
+  created() {
+    console.log("Starting Connection to WebSocket Server")
+    this.connection = new WebSocket('ws://localhost:9000')
+    this.connection.onopen = function (event) {
+      console.log(event)
+      console.log('Successfully connected to the echo WebSocket Server')
+    }
+    this.connection.onmessage = function (event) {
+      console.log(event)
     }
   },
   methods: {

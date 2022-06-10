@@ -43,9 +43,9 @@
 </template>
 
 <script>
-/* eslint-disable */
 export default {
-  name: 'HelloWorld',
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Alert',
   data() {
     return {
       active: false,
@@ -99,25 +99,6 @@ export default {
   background-color: red;
 }
 
-.v-widget-template > .background-image {
-  --background-image: "";
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  background-size: 100%;
-  border-radius: 0.5em;
-  opacity: 0.5;
-  z-index: 2;
-}
-
-.icon:only-child {
-  flex: 1;
-}
-
 .main {
   display: flex;
   flex-direction: row;
@@ -147,10 +128,6 @@ export default {
 .title {
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.icon + .titles {
-  padding-left: 0;
 }
 
 .subtitle {
