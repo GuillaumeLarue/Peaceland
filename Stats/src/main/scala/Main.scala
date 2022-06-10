@@ -69,7 +69,7 @@ object Main {
     //Question 2: angry evening, morning or night ?
     def TimeToBeAngry(df: DataFrame): DataFrame = {
       df.filter(col("citizenPeacescore") <= 20)
-        .groupBy(hour(col("timestamp")).alias("day_hour"))
+        .groupBy(hour(col("timestamp")).alias("dayDour"))
         .count()
         .alias("tot")
     }
