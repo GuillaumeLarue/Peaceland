@@ -46,13 +46,6 @@ object Main {
     final_df.printSchema()
     final_df.show(50, truncate = false)
 
-    /*
-    Question 1: how many reports on average per day ?
-    Question 2: angry evening, morning or night ?
-    Question 3: what is the day with the biggest number of angry people ?
-    Question 4: what is the ratio of alert ?
-    Question 5: what is the average of Peacescore ?
-     */
 
     // Question 1: how many reports on average per day ?
     def AverageNumberReportByDay(df: DataFrame): Double = {
@@ -66,6 +59,7 @@ object Main {
         .take(1)(0)
         .getAs[Double]("avg(avg(count))")
     }
+
     val averageNumberReportByDay = AverageNumberReportByDay(final_df)
 
     //Question 2: angry evening, morning or night ?
@@ -75,6 +69,7 @@ object Main {
         .count()
         .alias("tot")
     }
+
     val dfTimeAtAngry = TimeToBeAngry(final_df)
 
     // Question 3: what is the day with the biggest number of angry people ?
@@ -85,12 +80,15 @@ object Main {
         .count()
     }
 
+
+
     val dfDayWithBiggestAngry = DayWithBiggestAngry(final_df)
 
     // Question 4: what is the ratio of alert ?
     def RatioAlert(df: DataFrame): Float = {
       df.filter(col("citizenPeacescore") <= 20).count() / df.count().toFloat
     }
+
     val ratioAlert = RatioAlert(final_df)
 
     // Question 5: what is the average of Peacescore ?
@@ -100,12 +98,14 @@ object Main {
         .select(mean("citizenPeacescore"))
         .alias("averageCitizenPeacescore")
     }
-    val dfAveragePeaceScore = AveragePeaceScore(final_df)
 
+    val dfAveragePeaceScore = AveragePeaceScore(final_df)
 
 
     println("Question 1: how many reports on average per day ? ")
     print(averageNumberReportByDay)
+    println()
+    println()
 
     println("Question 2: angry evening, morning or night ?")
     dfTimeAtAngry.show(false)
@@ -114,10 +114,9 @@ object Main {
     println("Question 3: what is the day with the biggest number of angry people ?")
     dfDayWithBiggestAngry.show(false)
 
-
     println("Question 4: what is the ratio of alert ?")
     println(ratioAlert)
-
+    println()
 
     println("Question 5: what is the average of Peacescore ?")
     dfAveragePeaceScore.show(false)
